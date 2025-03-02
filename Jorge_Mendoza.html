@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Civil Engineer Portfolio</title>
+  <style>
+    /* Basic Reset & Overall Page Settings */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5e9d7; /* Cream background for the page */
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* ====================== */
+    /* MOUSE FOLLOWER CIRCLE */
+    /* ====================== */
+    .mouse-follower {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #fff;  /* Default to white circle */
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, border-color 0.2s ease;
+      z-index: 9999;
+    }
+
+    /* =================== */
+    /* HERO (BLACK) SECTION */
+    /* =================== */
+    .hero {
+      background-color: #000; /* Black background */
+      color: #fff;            /* White text */
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start; /* Align items at the top */
+      justify-content: center; /* Center horizontally */
+      gap: 40px;               /* Space between image & info block */
+    }
+
+    /* Profile Image (Left) */
+    .profile-pic {
+      width: 300px;  
+      height: 300px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #fff;
+      flex-shrink: 0; 
+    }
+
+    /* Info Block (Right), matching image size (300×300) */
+    .hero-info {
+      width: 300px;        /* Match the image width */
+      height: 300px;       /* Match the image height */
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Center horizontally */
+      justify-content: center; /* Center vertically */
+    }
+
+    /* Name & Title (tight spacing) */
+    .hero-info h1 {
+      font-size: 2rem;
+      margin: 0; 
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .hero-info h2 {
+      font-size: 1.2rem;
+      margin: 4px 0 8px; 
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.2;
+    }
+
+    /* Contact Info (email + phone), minimal spacing */
+    .contact-info {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .contact-info p {
+      margin: 0;
+      line-height: 1.3;
+    }
+    .contact-info a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    /* Buttons: LinkedIn + Resume */
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .buttons a {
+      display: inline-block;
+      padding: 8px 16px;
+      border: 2px solid #fff;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      text-decoration: none;
+      color: #fff;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .buttons a:hover {
+      background-color: #fff;
+      color: #000;
+    }
+
+    /* ABOUT Section (below the row, still in black hero) */
+    .about-section {
+      max-width: 900px;
+      margin: 40px auto 0 auto; /* Spacing above ABOUT */
+      text-align: center;
+    }
+    .about-section h3 {
+      font-size: 1.8rem;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .about-section p {
+      font-size: 1rem;
+      line-height: 1.5;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* =================== */
+    /* PROJECTS (CREAM) SECTION */
+    /* =================== */
+    .projects {
+      background-color: #f5e9d7; /* Same cream as body background */
+      color: #000;
+      padding: 50px 20px;
+    }
+    .projects-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .projects h2 {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .category {
+      margin-bottom: 30px;
+    }
+    .category h3 {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #ccc;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
+
+    /* ACCORDION STYLES */
+    .accordion-item {
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #fff;
+      overflow: hidden; /* For smooth transitions */
+    }
+    .accordion-item button {
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 15px 20px;
+      font-size: 1rem;
+      font-family: inherit;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .accordion-item button:hover {
+      background-color: #f0e5d4;
+    }
+    .accordion-item .arrow {
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+    .accordion-item .content {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      padding: 0 20px;
+      transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+      background-color: #fdfaf6;
+    }
+    .accordion-item.active .content {
+      max-height: 500px; /* Increase if your content is taller */
+      opacity: 1;
+      padding: 15px 20px;
+    }
+    .accordion-item.active .arrow {
+      transform: rotate(180deg);
+    }
+    .accordion-item .content p,
+    .accordion-item .content ul {
+      margin-bottom: 1em;
+      line-height: 1.5;
+    }
+    .accordion-item .content ul {
+      list-style-type: disc;
+      margin-left: 1.5em;
+      padding-left: 0;
+    }
+    .accordion-item .content ul li {
+      margin-bottom: 0.5em;
+    }
+
+    /* Centered Placeholder Image for Each Project */
+    .project-image {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .project-image img {
+      max-width: 200px;
+      height: auto;
+      display: inline-block;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Circle Mouse Follower -->
+  <div class="mouse-follower"></div>
+
+  <!-- HERO (BLACK) SECTION -->
+  <section class="hero">
+    <div class="hero-content">
+      <!-- Left: Profile Pic -->
+      <img
+        class="profile-pic"
+        src="profile.jpg"
+        alt="Profile Picture"
+      />
+
+      <!-- Right: Name, Title, Contact, Buttons (300×300 block) -->
+      <div class="hero-info">
+        <h1>Jorge Mendoza</h1>
+        <h2>Civil Engineer</h2>
+
+        <!-- Contact Info -->
+        <div class="contact-info">
+          <p><a href="mailto:jorge.mendoza@vanderbilt.edu">jorge.mendoza@vanderbilt.edu</a></p>
+          <p>901-849-1797</p>
+        </div>
+
+        <!-- Buttons -->
+        <div class="buttons">
+          <a href="www.linkedin.com/in/jorge-mendoza-263438225" target="_blank">LinkedIn</a>
+          <!-- Ensure resume.pdf is in the same folder -->
+          <a href="Jorge Mendoza Resume 2025.pdf" download>Resume</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT Section (Centered, do NOT increase size) -->
+    <div class="about-section">
+      <h3>ABOUT</h3>
+      <p>
+        I'm a Civil Engineering student at Vanderbilt University with hands-on experience in traffic data analysis and visualization. My involvement in ASCE competitions and leadership roles has sharpened my skills and broadened my perspective in addressing real-world transportation challenges. I am dedicated to leveraging my knowledge to enhance traffic congestion, safety, and mobility access for all.
+
+
+
+
+
+
+
+
+      </p>
+    </div>
+  </section>
+
+  <!-- PROJECTS (CREAM) SECTION -->
+  <section class="projects">
+    <div class="projects-container">
+      <h2>Engineering Projects</h2>
+
+      <!-- Work Category -->
+      <div class="category">
+        <h3>Work</h3>
+        <div class="accordion-item">
+          <button>
+            Prototype Knoxville Traffic Map
+            <span class="arrow">&#9662;</span>
+          </button>
+          <div class="content">
+            <div class="project-image">
+              <img src="project-Traffic Protype Image 1.png" alt="Project Engineer Image" style="max-width: 700px; height: auto;"/>
+            </div>
+            <p>I developed an interactive traffic map prototype that visualizes both real-time and historical traffic patterns to highlight daily congestion trends. The project used QGIS for tracing road geometries, Python with pgAdmin 4 for data processing, and Plotly Express to create an interactive map with a dynamic time slider and color-coded speed indicators. This work lays the groundwork for a live dashboard and demonstrates practical skills in data visualization and geospatial analysis.</p>
+            <ul>
+              <li>Software used: QGIS, pgAdmin 4, Python</li>
+              <li>Key skill: Data Visualzation, Programming, Road Geometry</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ASCE Category -->
+      <div class="category">
+        <h3>ASCE</h3>
+        <div class="accordion-item">
+          <button>
+            Balsa Bridge
+            <span class="arrow">&#9662;</span>
+          </button>
+          <div class="content">
+            <div class="project-image">
+              <img src="Balsa_Bridge.png" alt="Project Engineer Image" style="max-width: 250px; height: auto;"/>
+            </div>
+            <p>I led the construction of a balsa bridge that balanced lightweight efficiency with high load-bearing capacity by coordinating team tasks to meet competition criteria. Our bridge maintained a balance between weight and strength, earning 3rd place in the competition.
+            </p>
+            <ul>
+              <li>Key skill: Structural analysis</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button>
+            UESI Surveying Topographic Map
+            <span class="arrow">&#9662;</span>
+          </button>
+          <div class="content">
+            <div class="project-image">
+              <img src="topo_map1.png" alt="Project Engineer Image" style="max-width: 500px; height: auto;"/>
+            </div>
+            <p>As co-captain of the Surveying team, I led the creation of a topographic map for the UESI ASCE Student competition by assigning tasks and coordinating research to reduce individual workload. I was primarily responsible for the map's development, demonstrating effective leadership and technical expertise.
+              .</p>
+            <ul>
+              <li>Software used: AutoCAD Civil 3D</li>
+              <li>Key skill: Surveying, Topography</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Project Category -->
+      <div class="category">
+        <h3>Course Project</h3>
+        <div class="accordion-item">
+          <button>
+            Steel Bridge
+            <span class="arrow">&#9662;</span>
+          </button>
+          <div class="content">
+            <div class="project-image">
+              <img src="steel bridge 3.png" alt="Project Engineer Image" style="max-width: 430px; height: auto;"/>
+            </div>
+            <p>This project involved welding and constructing a steel bridge designed to support a minimum load of 350 lbs using principles of statics and structural engineering. I contributed by welding half of the bridge and performing internal force calculations, and the final structure held 910 lbs, exceeding the design criteria.
+            </p>
+            <ul>
+              <li>Key skill: Steel design, Fabrication, Statics</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JavaScript for Accordion & Mouse Follower -->
+  <script>
+    // Accordion Toggle
+    const accordionItems = document.querySelectorAll('.accordion-item');
+    accordionItems.forEach(item => {
+      const button = item.querySelector('button');
+      button.addEventListener('click', () => {
+        item.classList.toggle('active');
+      });
+    });
+
+    // Mouse Follower - change color based on hero or cream area
+    const follower = document.querySelector('.mouse-follower');
+    document.addEventListener('mousemove', (e) => {
+      follower.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+
+      const elementUnderCursor = document.elementFromPoint(e.clientX, e.clientY);
+      if (elementUnderCursor && elementUnderCursor.closest('.hero')) {
+        // In the black hero section, circle is white
+        follower.style.borderColor = '#fff';
+      } else {
+        // In the cream section, circle is black
+        follower.style.borderColor = '#000';
+      }
+    });
+  </script>
+</body>
+</html>
